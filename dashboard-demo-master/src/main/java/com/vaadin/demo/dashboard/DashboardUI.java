@@ -107,6 +107,7 @@ public class DashboardUI extends UI {
         root.addStyleName("root");
         root.setSizeFull();
         
+        
 
         // Unfortunate to use an actual widget here, but since CSS generated
         // elements can't be transitioned yet, we must
