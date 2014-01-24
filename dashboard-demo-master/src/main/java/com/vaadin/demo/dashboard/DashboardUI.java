@@ -16,7 +16,7 @@ import java.util.Locale;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
-
+import com.vaadin.demo.domain.Usuario;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.event.Transferable;
@@ -52,6 +52,11 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+
+import org.hibernate.Session;
+
+import utils.HibernateUtil;
+
 
 @Theme("dashboard")
 @Title("QuickTickets Dashboard")
@@ -97,7 +102,20 @@ public class DashboardUI extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-       // getSession().setConverterFactory(new MyConverterFactory());
+       
+//    	//PROBAMOS EL HIBERNATE
+//    	Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+//        session.beginTransaction();
+//
+//        Usuario usuario = new Usuario();
+//        usuario.setEmail("pepe@pepeinbox.com");
+//        usuario.setPassword("p3p3");
+//        usuario.setEliminado(false);
+//        session.save(usuario);
+//
+//        session.getTransaction().commit();
+//        HibernateUtil.getSessionFactory().close();
+    	// getSession().setConverterFactory(new MyConverterFactory());
 
         helpManager = new HelpManager(this);
 
@@ -201,9 +219,8 @@ public class DashboardUI extends UI {
 			@Override
             public void buttonClick(ClickEvent event) {
                 if (username.getValue() != null
-                        && username.getValue().equals("")
                         && password.getValue() != null
-                        && password.getValue().equals("")) {
+                        && Usuario.Login(username.getValue(),password.getValue())!=null) {
                     signin.removeShortcutListener(enter);
                     buildMainView();
                 } else {

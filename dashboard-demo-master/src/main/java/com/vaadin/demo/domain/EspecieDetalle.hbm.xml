@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.vaadin.demo.domain">
+
+    <class name="EspecieDetalle" table="especiedetalle">
+        <id name="especiedetalle" column="especiedetalle">
+            <generator class="native"/>
+        </id>
+        <property name="emision"/>
+        <property name="vencimiento"/>
+        <property name="nominal"/>
+        <property name="detalle"/>
+        <property name="formula"/>
+        <property name="legislatura"/>
+        <property name="bucket"/>
+        <property name="formulabucket"/>
+        <property name="moneda"/>
+    </class>
+
+</hibernate-mapping>
