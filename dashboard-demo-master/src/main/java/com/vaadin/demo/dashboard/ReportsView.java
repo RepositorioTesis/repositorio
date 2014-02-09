@@ -259,13 +259,6 @@ public class ReportsView extends HorizontalLayout implements View {
 
         if (!helpShown) {
             helpShown = true;
-            HelpManager helpManager = ((DashboardUI) getUI()).getHelpManager();
-            helpManager.addOverlay("Palette",
-                    "Drag the items from the palette onto the canvas",
-                    "palette");
-            helpManager.addOverlay("Re-order",
-                    "Drag the items on the canvas to re-order them", "reorder")
-                    .center();
         }
 
         HorizontalLayout editor = new HorizontalLayout();

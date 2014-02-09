@@ -2,7 +2,7 @@ package com.vaadin.demo.domain;
 
 public class Especie {
 	private String especie;
-	private Integer detalle;
+	private Integer especiedetalle;
 	public String getEspecie() {
 		return especie;
 	}
@@ -10,10 +10,10 @@ public class Especie {
 		this.especie = especie;
 	}
 	public Integer getDetalle() {
-		return detalle;
+		return especiedetalle;
 	}
 	public void setDetalle(Integer detalle) {
-		this.detalle = detalle;
+		this.especiedetalle = detalle;
 	}
 
 	

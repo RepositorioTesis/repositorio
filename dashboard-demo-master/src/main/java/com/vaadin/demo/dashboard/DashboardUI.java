@@ -17,6 +17,7 @@ import java.util.Locale;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.demo.domain.Usuario;
+import com.vaadin.demo.domain.UsuarioDetalle;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.event.Transferable;
@@ -87,7 +88,7 @@ public class DashboardUI extends UI {
         	
         	
             put("/dashboard", DashboardView.class);
-            put("/sales", SalesView.class);
+            put("/Cartera", CarteraView.class);
          //   put("/transactions", TransactionsView.class);
             put("/reports", ReportsView.class);
             put("/schedule", ScheduleView.class);
@@ -98,7 +99,7 @@ public class DashboardUI extends UI {
 
     private Navigator nav;
 
-    private HelpManager helpManager;
+//    private HelpManager helpManager;
 
     @Override
     protected void init(VaadinRequest request) {
@@ -115,9 +116,9 @@ public class DashboardUI extends UI {
 //
 //        session.getTransaction().commit();
 //        HibernateUtil.getSessionFactory().close();
-    	// getSession().setConverterFactory(new MyConverterFactory());
+//    	 getSession().setConverterFactory(new MyConverterFactory());
 
-        helpManager = new HelpManager(this);
+//        helpManager = new HelpManager(this);
 
         setLocale(Locale.US);
 
@@ -142,14 +143,14 @@ public class DashboardUI extends UI {
         if (exit) {
             root.removeAllComponents();
         }
-        helpManager.closeAll();
-        HelpOverlay w = helpManager
-                .addOverlay(
-                        "Welcome to the Dashboard Demo Application",
-                        "<p>This application is not real, it only demonstrates an application built with the <a href=\"http://vaadin.com\">Vaadin framework</a>.</p><p>No username or password is required, just click the ‘Sign In’ button to continue. You can try out a random username and password, though.</p>",
-                        "login");
-        w.center();
-        addWindow(w);
+//        helpManager.closeAll();
+//        HelpOverlay w = helpManager
+//                .addOverlay(
+//                        "Welcome to the Dashboard Demo Application",
+//                        "<p>This application is not real, it only demonstrates an application built with the <a href=\"http://vaadin.com\">Vaadin framework</a>.</p><p>No username or password is required, just click the ‘Sign In’ button to continue. You can try out a random username and password, though.</p>",
+//                        "login");
+//        w.center();
+//        addWindow(w);
 
         addStyleName("login");
 
@@ -259,7 +260,7 @@ public class DashboardUI extends UI {
             nav.addView(route, routes.get(route));
         }
 
-        helpManager.closeAll();
+//        helpManager.closeAll();
         removeStyleName("login");
         root.removeComponent(loginLayout);
 
@@ -355,7 +356,7 @@ public class DashboardUI extends UI {
 
         menu.removeAllComponents();
 
-        for (final String view : new String[] { "dashboard", "sales",
+        for (final String view : new String[] { "dashboard", "Cartera",
                 "transactions", "reports", "schedule" }) {
             Button b = new NativeButton(view.substring(0, 1).toUpperCase()
                     + view.substring(1).replace('-', ' '));
@@ -425,10 +426,10 @@ public class DashboardUI extends UI {
         if (f == null || f.equals("") || f.equals("/")) {
             nav.navigateTo("/dashboard");
             menu.getComponent(0).addStyleName("selected");
-            helpManager.showHelpFor(DashboardView.class);
+//            helpManager.showHelpFor(DashboardView.class);
         } else {
             nav.navigateTo(f);
-            helpManager.showHelpFor(routes.get(f));
+//            helpManager.showHelpFor(routes.get(f));
             viewNameToMenuButton.get(f).addStyleName("selected");
         }
 
@@ -441,14 +442,14 @@ public class DashboardUI extends UI {
 
 			@Override
             public boolean beforeViewChange(ViewChangeEvent event) {
-                helpManager.closeAll();
+//                helpManager.closeAll();
                 return true;
             }
 
             @Override
             public void afterViewChange(ViewChangeEvent event) {
                 View newView = event.getNewView();
-                helpManager.showHelpFor(newView);
+//                helpManager.showHelpFor(newView);
                 if (autoCreateReport && newView instanceof ReportsView) {
                     ((ReportsView) newView).autoCreate(2, items, transactions);
                 }
@@ -494,8 +495,13 @@ public class DashboardUI extends UI {
         viewNameToMenuButton.get("/reports").addStyleName("selected");
     }
 
-    HelpManager getHelpManager() {
-        return helpManager;
-    }
+//    HelpManager getHelpManager() {
+//        return helpManager;
+//    }
+
+	public UsuarioDetalle getUser() {
+		
+		return new UsuarioDetalle(1);
+	}
 
 }

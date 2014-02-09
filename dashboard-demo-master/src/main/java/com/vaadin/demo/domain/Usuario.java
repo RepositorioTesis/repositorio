@@ -1,15 +1,24 @@
 package com.vaadin.demo.domain;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
 
+import com.vaadin.demo.dashboard.DashboardUI;
+import com.vaadin.ui.UI;
+
 import utils.HibernateUtil;
 
 
-public class Usuario {
+public class Usuario implements Serializable{
 
-	private Integer idusuario;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5701601264401964971L;
+	private Integer usuario;
 	private String email;
 	private String password;
 	private Boolean eliminado;
@@ -17,12 +26,12 @@ public class Usuario {
 	public Usuario(){
 		
 	}
-	
-	public Integer getIdusuario() {
-		return idusuario;
+
+	public Integer getUsuario() {
+		return usuario;
 	}
-	public void setIdusuario(Integer idusuario) {
-		this.idusuario = idusuario;
+	public void setUsuario(Integer idusuario) {
+		this.usuario = idusuario;
 	}
 	public String getEmail() {
 		return email;
@@ -50,7 +59,7 @@ public class Usuario {
         session.getTransaction().commit();
         if(result.isEmpty())
         	return null;
-        return result.get(0).getIdusuario();
+        return result.get(0).getUsuario();
 	}
 	
 	

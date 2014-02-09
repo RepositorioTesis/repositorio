@@ -1,7 +1,12 @@
 package utils;
 
+import java.util.List;
+
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+
+import com.vaadin.demo.domain.Usuario;
 
 public class HibernateUtil {
 
@@ -22,5 +27,36 @@ public class HibernateUtil {
     public static SessionFactory getSessionFactory() {
         return sessionFactory;
     }
+    
+    public static <T> Boolean saveEntity(T object){
+    	try {
+    		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+    		session.beginTransaction();
+    		session.save(object);
+    		session.getTransaction().commit();
+    		HibernateUtil.getSessionFactory().close();
+    		return true;
+    		
+		} catch (Exception e) {
+			return false;
+		}
+    }
+    
+    public static  List<?> getEntity(String consulta){
+    		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+    		session.beginTransaction();
+    		try{
+            List<?> result = session.createQuery(consulta).list();
+            return result;
+    		} catch (Exception e) {
+    			System.out.println(e.toString());
+    		}
+            session.getTransaction().commit();
+//            if(result.isEmpty())
+//            	return null;
+//            return result;
+            return null;
+    }
+    
 
 }

@@ -12,8 +12,9 @@ package com.vaadin.demo.dashboard;
 
 import java.text.DecimalFormat;
 
-import com.vaadin.data.Property;
+import vistas.ModalTestDeInversor;
 
+import com.vaadin.data.Property;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -95,12 +96,12 @@ public class DashboardView extends VerticalLayout implements View {
         top.addComponent(notify);
         top.setComponentAlignment(notify, Alignment.MIDDLE_LEFT);
 
-        Button edit = new Button();
-        edit.addStyleName("icon-edit");
-        edit.addStyleName("icon-only");
-        top.addComponent(edit);
-        edit.setDescription("Edit Dashboard");
-        edit.addClickListener(new ClickListener() {
+        Button editConf = new Button();
+        editConf.addStyleName("icon-edit");
+        editConf.addStyleName("icon-only");
+        top.addComponent(editConf);
+        editConf.setDescription("Edit Dashboard");
+        editConf.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 final Window w = new Window("Edit Dashboard");
@@ -166,7 +167,23 @@ public class DashboardView extends VerticalLayout implements View {
 
             }
         });
-        top.setComponentAlignment(edit, Alignment.MIDDLE_LEFT);
+        Button edit = new Button();
+        edit.addStyleName("icon-config");
+        edit.addStyleName("icon-only");
+        top.addComponent(edit);
+        edit.setDescription("Test de Inversor");
+        edit.addClickListener(new ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+               
+
+                getUI().addWindow(new ModalTestDeInversor());
+
+               
+
+            }
+        });
+        top.setComponentAlignment(editConf, Alignment.MIDDLE_LEFT);
 
         HorizontalLayout row = new HorizontalLayout();
         row.setSizeFull();

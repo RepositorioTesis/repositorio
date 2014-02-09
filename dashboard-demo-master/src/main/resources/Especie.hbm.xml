@@ -5,12 +5,10 @@
 <hibernate-mapping package="com.vaadin.demo.domain">
 
     <class name="Especie" table="especie">
-        <id name="cotizacion" column="cotizacion">
+        <id name="especie" column="especie">
             <generator class="native"/>
         </id>
-        <property name="especie"/>
-   		<property name="valor"/>
-   		<property name="timestamp"/>
+        <property name="especiedetalle"/>
     </class>
 
 </hibernate-mapping>
