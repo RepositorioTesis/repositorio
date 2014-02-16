@@ -1,5 +1,11 @@
 package com.vaadin.demo.domain;
 
+import java.util.List;
+
+import com.vaadin.ui.UI;
+
+import utils.HibernateUtil;
+
 public class Tenencia {
 
 	private Integer tenencia;
@@ -31,5 +37,11 @@ public class Tenencia {
 		this.usuario = usuario;
 	}
 	
-	
+	static public Tenencia getTenencia(String especie){
+		
+		List<Tenencia> tenencia = (List<Tenencia>)HibernateUtil.getEntity("FROM Tenencia WHERE especie='"+especie+"'and usuario='"+UsuarioDetalle.getCurrentUser().getUsuario()+"'"); 
+		return tenencia.isEmpty() ? null : tenencia.get(0);
+		
+		
+	}
 }

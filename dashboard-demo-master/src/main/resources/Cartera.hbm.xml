@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.vaadin.demo.domain">
+
+    <class name="Cartera" table="cartera">
+ 		 <id name="fecha" column="fecha">
+         </id>
+ 
+   		<property name="saldo"/>
+   		 <property name="especie" column="especie"/>
+                <property name="usuario" column="usuario"/>  
+                <property name="valor"/>
+                <property name="nominal"/>
+    </class>
+
+</hibernate-mapping>

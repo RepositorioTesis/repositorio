@@ -13,14 +13,18 @@ package com.vaadin.demo.dashboard;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
-import vistas.ModalComprarTitulo;
+import utils.Controls;
+import utils.HibernateUtil;
+import vistas.ModalOperarTitulo;
 
 import com.google.gwt.core.client.Callback;
 import com.vaadin.addon.timeline.Timeline;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.filter.Not;
 import com.vaadin.demo.domain.Cartera;
+import com.vaadin.demo.domain.Especie;
 import com.vaadin.demo.domain.UsuarioDetalle;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
@@ -62,10 +66,14 @@ public class CarteraView extends VerticalLayout implements View {
         toolbar.addStyleName("toolbar");
         addComponent(toolbar);
 
-        final ComboBox movieSelect = new ComboBox();
-        movieSelect.setWidth("300px");
-        toolbar.addComponent(movieSelect);
-        movieSelect.addShortcutListener(new ShortcutListener("Add",
+        HashMap<String, Especie> especies = new HashMap<String, Especie>();
+        for(Especie especie : Especie.getAll()){
+        	especies.put(especie.getEspecie(), especie);
+        }
+        final ComboBox cmbEspecies = Controls.crearCombo(especies);
+        cmbEspecies.setWidth("300px");
+        toolbar.addComponent(cmbEspecies);
+        cmbEspecies.addShortcutListener(new ShortcutListener("Add",
                 KeyCode.ENTER, null) {
 
             @Override
@@ -73,11 +81,29 @@ public class CarteraView extends VerticalLayout implements View {
             }
         });
 
-        Button add = new Button("Add");
+        Button add = new Button("Operar");
         add.addStyleName("default");
         add.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
+            	try {
+            	UI.getCurrent().addWindow(new ModalOperarTitulo(new Callback<Boolean, Boolean>() {
+
+					@Override
+					public void onFailure(Boolean reason) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void onSuccess(Boolean result) {
+						refreshTable();
+						
+					}
+				},(Especie) cmbEspecies.getValue()));
+            	} catch (Exception e){
+            		Notification.show("Seleccione un titulo para operar.",Type.HUMANIZED_MESSAGE);
+            	}
             }
         });
         toolbar.addComponent(add);
@@ -107,6 +133,11 @@ public class CarteraView extends VerticalLayout implements View {
         
         ic = new IndexedContainer();
         ic.addContainerProperty("fila", HorizontalLayout.class, new HorizontalLayout());
+        ic.addContainerProperty("especie", String.class, "");
+        ic.addContainerProperty("nominal", Double.class, 0d);
+        ic.addContainerProperty("saldo", Double.class, 0d);
+        ic.addContainerProperty("valor", Double.class,0d);
+
     	
         
         vtlMain.addComponent(tblCartera);
@@ -125,41 +156,45 @@ public class CarteraView extends VerticalLayout implements View {
     	for(Cartera cartera: UsuarioDetalle.getCurrentUser().obtenerCartera()){
     		HorizontalLayout htlFila = new HorizontalLayout();
     		htlFila.addComponent(new Label(cartera.getEspecie()));
-    		htlFila.addComponent(new Label("$"+cartera.getCotizacion().toString()));
+    		htlFila.addComponent(new Label("$"+cartera.getNominal().toString()));
     		htlFila.addComponent(new Label("$"+cartera.getSaldo().toString()));
     		Button btnComprarTitulo = new Button();
-    		btnComprarTitulo.addClickListener(new ClickListener() {
-				
-				@Override
-				public void buttonClick(ClickEvent event) {
-					UI.getCurrent().addWindow(new ModalComprarTitulo("Comprar", "No Comprar", "Adquirir un titulo", new Callback<Boolean, Boolean>() {
-						
-						@Override
-						public void onSuccess(Boolean result) {
-							refreshTable();
-							
-						}
-						
-						@Override
-						public void onFailure(Boolean reason) {
-							// TODO Auto-generated method stub
-							
-						}
-					}));
+//    		btnComprarTitulo.addClickListener(new ClickListener() {
+//				
+//				@Override
+//				public void buttonClick(ClickEvent event) {
+//					UI.getCurrent().addWindow(new ModalOperarTitulo(especies. new Callback<Boolean, Boolean>() {
+//						
+//						@Override
+//						public void onSuccess(Boolean result) {
+//							refreshTable();
+//							
+//						}
+//						
+//						@Override
+//						public void onFailure(Boolean reason) {
+//							// TODO Auto-generated method stub
+//							
+//						}
+//					}));
 					
-				}
-			});
-							
+//				}
+//			});
+//							
 							
 							
     		htlFila.addComponent(btnComprarTitulo);
     		htlFila.setSizeFull();
     		Object id = ic.addItem();
     		ic.getContainerProperty(id, "fila").setValue(htlFila);
+    		ic.getContainerProperty(id, "especie").setValue(cartera.getEspecie());
+    		ic.getContainerProperty(id, "nominal").setValue(cartera.getNominal());
+    		ic.getContainerProperty(id, "valor").setValue(cartera.getValor());
+    		ic.getContainerProperty(id, "saldo").setValue(cartera.getSaldo());
     	}
     	
     	tblCartera.setContainerDataSource(ic);
-    	tblCartera.setVisibleColumns(new Object[]{"fila"});
+    	tblCartera.setVisibleColumns(new Object[]{"especie","nominal","valor","saldo"});
     }
 
 }

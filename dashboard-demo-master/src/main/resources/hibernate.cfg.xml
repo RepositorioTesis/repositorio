@@ -15,13 +15,16 @@
       <property name="hibernate.hbm2ddl.auto">update</property>
       <property name="hibernate.current_session_context_class">org.hibernate.context.ThreadLocalSessionContext</property> 
       <!-- Mapping files -->
-<!-- 	    <mapping resource="Especie.hbm.xml" /> -->
+      <mapping resource="Cotizacion.hbm.xml" />
+      <mapping resource="Operacion.hbm.xml" />
+      <mapping resource="Tenencia.hbm.xml" />
+	    <mapping resource="Especie.hbm.xml" />
 		<mapping resource="Usuario.hbm.xml" />
 		<mapping resource="Cartera.hbm.xml" />
-<!-- 		<mapping resource="Cotizacion.hbm.xml" /> -->
+		
 <!-- 		<mapping resource="EspecieDetalle.hbm.xml" /> -->
-<!-- 		<mapping resource="Operacion.hbm.xml" /> -->
-<!-- 		<mapping resource="Tenencia.hbm.xml" /> -->
+		
+		
 		<mapping resource="UsuarioDetalle.hbm.xml" />
 </session-factory>
 </hibernate-configuration>

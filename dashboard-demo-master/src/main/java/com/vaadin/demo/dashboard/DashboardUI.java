@@ -189,10 +189,13 @@ public class DashboardUI extends UI {
         final TextField username = new TextField("Username");
         username.focus();
         fields.addComponent(username);
-
+        
         final PasswordField password = new PasswordField("Password");
         fields.addComponent(password);
-
+        //TODO: Borrar
+        password.setValue("root");
+        username.setValue("admin@tesis.com");
+        
         final Button signin = new Button("Sign In");
         signin.addStyleName("default");
         fields.addComponent(signin);

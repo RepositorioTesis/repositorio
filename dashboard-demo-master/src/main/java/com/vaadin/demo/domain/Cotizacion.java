@@ -1,6 +1,9 @@
 package com.vaadin.demo.domain;
 
 import java.util.Date;
+import java.util.List;
+
+import utils.HibernateUtil;
 
 public class Cotizacion {
 	private Integer cotizacion;
@@ -27,5 +30,14 @@ public class Cotizacion {
 		this.timestamp = timestamp;
 	}
 	
+	public static Double getCotizacion(String especie){
+		return ((List<Cotizacion>) HibernateUtil.getEntity("FROM Cotizacion WHERE especie='"+especie+"' ORDER BY fecha desc LIMIT 1")).get(0).getValor();
+	}
+	public Integer getCotizacion() {
+		return cotizacion;
+	}
+	public void setCotizacion(Integer cotizacion) {
+		this.cotizacion = cotizacion;
+	}
 	
 }

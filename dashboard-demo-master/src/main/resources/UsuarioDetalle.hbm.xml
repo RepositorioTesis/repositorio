@@ -4,13 +4,12 @@
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="com.vaadin.demo.domain">
 
-    <class name="Operacion" table="operacion">
-        <id name="operacion" column="operacion">
-            <generator class="native"/>
+    <class name="UsuarioDetalle" table="usuariodetalle">
+        <id name="usuario" column="usuario">
         </id>
-        <property name="tenencia"/>
-   		<property name="valor"/>
-   		<property name="fecha"/>
+        <property name="perfil"/>
+   		<property name="nombre"/>
+   		<property name="apellido"/>
     </class>
 
 </hibernate-mapping>
