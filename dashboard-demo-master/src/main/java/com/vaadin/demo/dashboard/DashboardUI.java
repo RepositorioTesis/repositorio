@@ -57,6 +57,7 @@ import com.vaadin.ui.VerticalLayout;
 import org.hibernate.Session;
 
 import utils.HibernateUtil;
+import vistas.ModalTestDeInversor;
 
 
 @Theme("dashboard")
@@ -77,7 +78,7 @@ public class DashboardUI extends UI {
 
     CssLayout menu = new CssLayout();
     CssLayout content = new CssLayout();
-
+    private Integer idUsuario;
     HashMap<String, Class<? extends View>> routes = new HashMap<String, Class<? extends View>>() {
         /**
 		 * 
@@ -89,9 +90,9 @@ public class DashboardUI extends UI {
         	
             put("/dashboard", DashboardView.class);
             put("/Cartera", CarteraView.class);
-         //   put("/transactions", TransactionsView.class);
-            put("/reports", ReportsView.class);
-            put("/schedule", ScheduleView.class);
+            put("/Especies", EspecieView.class);
+//            put("/reports", ReportsView.class);
+//            put("/schedule", ScheduleView.class);
         }
     };
 
@@ -168,13 +169,13 @@ public class DashboardUI extends UI {
         labels.addStyleName("labels");
         loginPanel.addComponent(labels);
 
-        Label welcome = new Label("Welcome");
+        Label welcome = new Label("Bienvenido");
         welcome.setSizeUndefined();
         welcome.addStyleName("h4");
         labels.addComponent(welcome);
         labels.setComponentAlignment(welcome, Alignment.MIDDLE_LEFT);
 
-        Label title = new Label("QuickTickets Dashboard");
+        Label title = new Label("Finanzas Budget");
         title.setSizeUndefined();
         title.addStyleName("h2");
         title.addStyleName("light");
@@ -219,32 +220,36 @@ public class DashboardUI extends UI {
 			 * 
 			 */
 			private static final long serialVersionUID = 8646342267124075364L;
+			
 
 			@Override
             public void buttonClick(ClickEvent event) {
-                if (username.getValue() != null
-                        && password.getValue() != null
-                        && Usuario.Login(username.getValue(),password.getValue())!=null) {
-                    signin.removeShortcutListener(enter);
-                    buildMainView();
-                } else {
-                    if (loginPanel.getComponentCount() > 2) {
-                        // Remove the previous error message
-                        loginPanel.removeComponent(loginPanel.getComponent(2));
-                    }
-                    // Add new error message
-                    Label error = new Label(
-                            "Wrong username or password. <span>Hint: try empty values</span>",
-                            ContentMode.HTML);
-                    error.addStyleName("error");
-                    error.setSizeUndefined();
-                    error.addStyleName("light");
-                    // Add animation
-                    error.addStyleName("v-animate-reveal");
-                    loginPanel.addComponent(error);
-                    username.focus();
-                }
-            }
+				if (username.getValue() != null
+						&& password.getValue() != null
+						) 
+					idUsuario = Usuario.Login(username.getValue(),password.getValue());
+				if (idUsuario != null){
+					signin.removeShortcutListener(enter);
+					buildMainView();
+
+				} else {
+					if (loginPanel.getComponentCount() > 2) {
+						// Remove the previous error message
+						loginPanel.removeComponent(loginPanel.getComponent(2));
+					}
+					// Add new error message
+					Label error = new Label(
+							"Wrong username or password. <span>Hint: try empty values</span>",
+							ContentMode.HTML);
+					error.addStyleName("error");
+					error.setSizeUndefined();
+					error.addStyleName("light");
+					// Add animation
+					error.addStyleName("v-animate-reveal");
+					loginPanel.addComponent(error);
+					username.focus();
+				}
+			}
         });
 
         signin.addShortcutListener(enter);
@@ -288,7 +293,7 @@ public class DashboardUI extends UI {
                             {
                                 addStyleName("branding");
                                 Label logo = new Label(
-                                        "<span>QuickTickets</span> Dashboard",
+                                        "<span>Finanzas</span> Budget",
                                         ContentMode.HTML);
                                 logo.setSizeUndefined();
                                 addComponent(logo);
@@ -316,22 +321,30 @@ public class DashboardUI extends UI {
                                 userName.setSizeUndefined();
                                 addComponent(userName);
 
+                                Command perfil = new Command() {
+                                    @Override
+                                    public void menuSelected(
+                                            MenuItem selectedItem) {
+                                        UI.getCurrent().addWindow(new ModalTestDeInversor());
+                                    }
+                                };
+                                
                                 Command cmd = new Command() {
                                     @Override
                                     public void menuSelected(
                                             MenuItem selectedItem) {
                                         Notification
-                                                .show("Not implemented in this demo");
+                                                .show("No implementado");
                                     }
                                 };
                                 MenuBar settings = new MenuBar();
                                 MenuItem settingsMenu = settings.addItem("",
                                         null);
                                 settingsMenu.setStyleName("icon-cog");
-                                settingsMenu.addItem("Settings", cmd);
-                                settingsMenu.addItem("Preferences", cmd);
+                                settingsMenu.addItem("Configuracion", cmd);
+                                settingsMenu.addItem("Test de Inversor", perfil);
                                 settingsMenu.addSeparator();
-                                settingsMenu.addItem("My Account", cmd);
+                                settingsMenu.addItem("Mi Cuenta", cmd);
                                 addComponent(settings);
 
                                 Button exit = new NativeButton("Exit");
@@ -360,10 +373,19 @@ public class DashboardUI extends UI {
         menu.removeAllComponents();
 
         for (final String view : new String[] { "dashboard", "Cartera",
-                "transactions", "reports", "schedule" }) {
+                "Especies" }) {
             Button b = new NativeButton(view.substring(0, 1).toUpperCase()
                     + view.substring(1).replace('-', ' '));
-            b.addStyleName("icon-" + view);
+            if(view.equals("Cartera")){
+            	b.addStyleName("icon-transactions");
+            }else{
+            	if(view.equals("Especies"))
+            		b.addStyleName("icon-sales");
+            	else{
+           			b.addStyleName("icon-" + view);
+            	}
+            }
+//            b.addStyleName("icon-" + view);
             b.addClickListener(new ClickListener() {
                 /**
 				 * 
@@ -420,7 +442,7 @@ public class DashboardUI extends UI {
 
         viewNameToMenuButton.get("/dashboard").setHtmlContentAllowed(true);
         viewNameToMenuButton.get("/dashboard").setCaption(
-                "Dashboard<span class=\"badge\">2</span>");
+                "Dashboard<span class=\"badge\">"+getUser().obtenerNotificacion().size()+"</span>");
 
         String f = Page.getCurrent().getUriFragment();
         if (f != null && f.startsWith("!")) {
@@ -504,7 +526,7 @@ public class DashboardUI extends UI {
 
 	public UsuarioDetalle getUser() {
 		
-		return new UsuarioDetalle(1);
+		return UsuarioDetalle.getUsuarioDetalle(idUsuario);
 	}
 
 }

@@ -39,5 +39,16 @@ public class Cotizacion {
 	public void setCotizacion(Integer cotizacion) {
 		this.cotizacion = cotizacion;
 	}
+	public static List<Cotizacion> getCotizaciones(String especie2) {
+		return (List<Cotizacion>) HibernateUtil.getEntity("FROM Cotizacion WHERE especie='"+especie2+"' ORDER BY fecha ASC");
+	}
+	public static Double getCotizacion(String especie2, Date fecha) {
+		return ((List<Cotizacion>) 
+				HibernateUtil.getEntity("FROM Cotizacion"
+					+ " WHERE ESPECIE LIKE '"+especie2+"' AND FECHA < '"+fecha
+							+ "' ORDER BY FECHA")).get(0).getValor();
+	}
 	
+ 
+
 }

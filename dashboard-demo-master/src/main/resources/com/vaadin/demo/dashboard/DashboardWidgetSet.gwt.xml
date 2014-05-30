@@ -31,4 +31,6 @@
     <inherits name="com.vaadin.addon.timeline.gwt.TimelineWidgetSet" />
 
     <inherits name="it.portus.addon.numberfield.widgetset.NumberfieldWidgetset" />
+
+    <inherits name="org.vaadin.actionbuttontextfield.widgetset.ActionButtonTextFieldWidgetset" />
 </module>

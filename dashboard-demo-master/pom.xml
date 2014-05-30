@@ -27,7 +27,10 @@
 
 
   <repositories>
-
+<repository>
+   <id>vaadin-addons</id>
+   <url>http://maven.vaadin.com/vaadin-addons</url>
+</repository>
 
     
 
@@ -128,6 +131,21 @@
 
 
   <dependencies>
+<!--   ADDONS VAADIN CHART -->
+
+<dependency>
+   <groupId>com.vaadin.addon</groupId>
+   <artifactId>vaadin-charts</artifactId>
+   <version>1.1.5</version>
+</dependency>
+  
+  <!-- ADDONS VAADIN SEARCH -->
+  <dependency>
+   <groupId>org.vaadin.addons</groupId>
+   <artifactId>actionbuttontextfield</artifactId>
+   <version>1.0.2</version>
+</dependency>
+  
   
   <!-- Hibernate framework -->
     <dependency>

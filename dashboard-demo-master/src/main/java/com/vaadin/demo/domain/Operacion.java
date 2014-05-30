@@ -1,6 +1,9 @@
 package com.vaadin.demo.domain;
 
 import java.util.Date;
+import java.util.List;
+
+import utils.HibernateUtil;
 
 public class Operacion {
 	private Integer tenencia;
@@ -31,6 +34,9 @@ public class Operacion {
 	}
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
+	}
+	public static List<Operacion> getOperaciones(Integer tenencia2) {
+		return (List<Operacion>) HibernateUtil.getEntity("FROM Operacion WHERE tenencia="+tenencia2);
 	}
 	
 	

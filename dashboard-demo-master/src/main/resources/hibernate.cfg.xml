@@ -21,8 +21,8 @@
 	    <mapping resource="Especie.hbm.xml" />
 		<mapping resource="Usuario.hbm.xml" />
 		<mapping resource="Cartera.hbm.xml" />
-		
-<!-- 		<mapping resource="EspecieDetalle.hbm.xml" /> -->
+		<mapping resource="Notificacion.hbm.xml" />
+		<mapping resource="EspecieDetalle.hbm.xml" />
 		
 		
 		<mapping resource="UsuarioDetalle.hbm.xml" />

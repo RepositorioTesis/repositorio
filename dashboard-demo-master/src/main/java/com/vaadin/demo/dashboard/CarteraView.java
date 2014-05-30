@@ -1,5 +1,5 @@
 /**
- * DISCLAIMER
+ç * DISCLAIMER
  * 
  * The quality of the code is such that you should not copy any of it as best
  * practice how to build Vaadin applications.
@@ -109,10 +109,11 @@ public class CarteraView extends VerticalLayout implements View {
         toolbar.addComponent(add);
         toolbar.setComponentAlignment(add, Alignment.BOTTOM_LEFT);
 
-        Button clear = new Button("Clear");
+        Button clear = new Button("Analizar");
         clear.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
+            	Notification.show("Envio de datos de analisis", Type.TRAY_NOTIFICATION);
             }
         });
         toolbar.addComponent(clear);

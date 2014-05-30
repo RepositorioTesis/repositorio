@@ -36,7 +36,7 @@ public class ModalTestDeInversor extends Modal{
 
 	public ModalTestDeInversor() {
 		
-		super("Testeamela","Cancelar" ,"Test de Inversor");
+		super("Test","Cancelar" ,"Test de Inversor");
 		this.setLayout(crearForm());
 		this.setHeight("600px");
 		this.setWidth("600px");
@@ -124,6 +124,7 @@ public class ModalTestDeInversor extends Modal{
 		pregunta7.setItemCaption(10, "A                             7,2%                 16,3%                   -5,6% ");
 
 		form.addComponent(pregunta1);
+		form.addComponent(new Label("<hr>",ContentMode.HTML));
 		form.addComponent(pregunta2);
 		form.addComponent(pregunta3);
 		form.addComponent(pregunta4);

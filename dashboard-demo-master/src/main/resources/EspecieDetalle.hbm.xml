@@ -17,6 +17,8 @@
         <property name="bucket"/>
         <property name="formulabucket"/>
         <property name="moneda"/>
+        <property name="nombre"/>
+
     </class>
 
 </hibernate-mapping>

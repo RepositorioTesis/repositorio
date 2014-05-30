@@ -28,19 +28,21 @@ public class HibernateUtil {
         return sessionFactory;
     }
     
-    public static <T> Boolean saveEntity(T object){
+    public static <T> Boolean saveEntity(T object) throws Exception{
+    	Session session = HibernateUtil.getSessionFactory().getCurrentSession();
     	try {
-    		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
     		session.beginTransaction();
-    		session.save(object);
+    		session.saveOrUpdate(object);
     		session.getTransaction().commit();
-    		HibernateUtil.getSessionFactory().close();
+    		
     		return true;
     		
 		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
+			session.close();
+		 throw e;
+		} finally {
+			//HibernateUtil.getSessionFactory().close();
+		} 
     }
     
     public static  List<?> getEntity(String consulta){

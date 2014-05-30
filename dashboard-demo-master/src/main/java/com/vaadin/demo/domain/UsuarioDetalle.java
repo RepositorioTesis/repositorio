@@ -23,9 +23,28 @@ public class UsuarioDetalle {
 	private String perfil;
 	private String nombre;
 	private String apellido;
+	private String saludo;
+	private String nota;
 	
 	
 	
+	
+	public String getNota() {
+		return nota;
+	}
+
+	public void setNota(String nota) {
+		this.nota = nota;
+	}
+
+	public String getSaludo() {
+		return saludo;
+	}
+
+	public void setSaludo(String saludo) {
+		this.saludo = saludo;
+	}
+
 	public UsuarioDetalle() {
 		this.usuario=1;
 		this.nombre="Gabriel";
@@ -65,10 +84,9 @@ public class UsuarioDetalle {
 		this.apellido = apellido;
 	}
 
-	public UsuarioDetalle(Integer id){
-		this.usuario=1;
-		this.nombre="Gabriel";
-		this.apellido = "Calabro";
+	public static UsuarioDetalle getUsuarioDetalle(Integer id){
+		return (UsuarioDetalle) HibernateUtil.getEntity("FROM UsuarioDetalle WHERE usuario="+id).get(0);
+		
 	}
 	
 	
@@ -112,6 +130,15 @@ public class UsuarioDetalle {
 	
 	public static UsuarioDetalle getCurrentUser(){
 		return ((DashboardUI)UI.getCurrent()).getUser();
+	}
+	
+	public List<Notificacion> obtenerNotificacion(){
+		try {
+			return (List<Notificacion>)HibernateUtil.getEntity("FROM Notificacion "
+															 + "WHERE usuario='"+usuario+"' AND vista=false");
+		} catch (Exception e) {
+			return new ArrayList<Notificacion>();
+		}
 	}
 
 }

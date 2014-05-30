@@ -10,6 +10,8 @@
         <property name="perfil"/>
    		<property name="nombre"/>
    		<property name="apellido"/>
+   		<property name="saludo"/>
+   		<property name="nota"/>
     </class>
 
 </hibernate-mapping>

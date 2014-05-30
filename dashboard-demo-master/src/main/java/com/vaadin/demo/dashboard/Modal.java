@@ -79,7 +79,8 @@ public class Modal extends Window{
                  btnOk.addClickListener(setOkListener());
                  btnOk.setClickShortcut(KeyCode.ENTER, null);
                  btnOk.setImmediate(true);
-                 addComponent(btnOk);
+                 if(!okLabel.equals(""))
+                	 addComponent(btnOk);
              }
          });
 	}
@@ -122,5 +123,8 @@ public class Modal extends Window{
 	
 	protected void setOkCaption(String caption){
 		btnOk.setCaption(caption);
+	}
+	public void setAncho(String width){
+		this.setWidth(width);
 	}
 }

@@ -1,6 +1,11 @@
 package com.vaadin.demo.domain;
 
 import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Transient;
+
+import utils.HibernateUtil;
 
 public class EspecieDetalle {
 	private Integer especiedetalle;
@@ -11,8 +16,17 @@ public class EspecieDetalle {
 	private String formula;
 	private String legislatura;
 	private Boolean bucket;
-	private Integer moneda;
+	private String moneda;
 	private String formulabucket;
+	private String nombre;
+	public String getNombre() {
+		return nombre;
+	}
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	@Transient
+	private String especie;
 	public Integer getEspeciedetalle() {
 		return especiedetalle;
 	}
@@ -61,10 +75,10 @@ public class EspecieDetalle {
 	public void setBucket(Boolean bucket) {
 		this.bucket = bucket;
 	}
-	public Integer getMoneda() {
+	public String getMoneda() {
 		return moneda;
 	}
-	public void setMoneda(Integer moneda) {
+	public void setMoneda(String moneda) {
 		this.moneda = moneda;
 	}
 	public String getFormulabucket() {
@@ -73,6 +87,20 @@ public class EspecieDetalle {
 	public void setFormulabucket(String formulabucket) {
 		this.formulabucket = formulabucket;
 	}
+	public static List<EspecieDetalle> getAll() {
+		return  (List<EspecieDetalle>) HibernateUtil.getEntity("FROM EspecieDetalle");
+	}
+	public static EspecieDetalle getEspecieDetalle(String especie){
+		return ((List<EspecieDetalle>) HibernateUtil.getEntity("FROM EspecieDetalle WHERE especiedetalle='"+especie+"'")).get(0);
+	}
+	public String getEspecie(){
+		if(especie==null){
+			especie = Especie.getEspecie(especiedetalle.toString());
+		}
+		return especie;
+	}
 	
-	
+	public static String getById(String especie){
+		return ((List<Especie>) HibernateUtil.getEntity("FROM Especie WHERE especie='"+especie+"'")).get(0).getespeciedetalle().toString();
+	}
 }

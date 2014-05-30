@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.transaction.Transactional.TxType;
 
+import org.hibernate.HibernateException;
+
 import utils.HibernateUtil;
 import it.portus.addon.numberfield.SpinnerNumberField;
 import it.portus.addon.numberfield.TextualNumberField;
@@ -83,14 +85,22 @@ public class ModalOperarTitulo extends ModalCallback{
 			tenencia.setEliminado(false);
 			tenencia.setEspecie(especie.getEspecie());
 			tenencia.setUsuario(UsuarioDetalle.getCurrentUser().getUsuario());
-			HibernateUtil.saveEntity(tenencia);
+			try {
+				HibernateUtil.saveEntity(tenencia);
+			} catch (Exception e) {
+				Notification.show(e.getMessage(),Type.HUMANIZED_MESSAGE);
+			}
 			tenencia = Tenencia.getTenencia(especie.getEspecie());
 		}
 		operacion.setTenencia(tenencia.getTenencia());
 		operacion.setFecha(new Date());
 		Double nominal = Cotizacion.getCotizacion(especie.getEspecie());
 		operacion.setValor((Double.parseDouble(txtMonto.getValue())/nominal)*100);
-		HibernateUtil.saveEntity(operacion);
+		try{
+			HibernateUtil.saveEntity(operacion);
+		} catch (Exception e){
+			Notification.show(e.getCause().getMessage(),Type.HUMANIZED_MESSAGE);
+		}
 		UI.getCurrent().removeWindow(this);
 		super.pressOk();
 	}

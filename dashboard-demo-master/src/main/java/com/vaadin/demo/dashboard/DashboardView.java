@@ -10,11 +10,21 @@
 
 package com.vaadin.demo.dashboard;
 
-import java.text.DecimalFormat;
+import graficos.ChartComposicionCartera;
+import graficos.ChartComposicionCarteraMoneda;
+import graficos.ChartGanancias;
 
+import java.text.DecimalFormat;
+import java.util.List;
+
+import utils.HibernateUtil;
 import vistas.ModalTestDeInversor;
 
 import com.vaadin.data.Property;
+import com.vaadin.demo.domain.Notificacion;
+import com.vaadin.demo.domain.UsuarioDetalle;
+import com.vaadin.event.FieldEvents.TextChangeEvent;
+import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -32,7 +42,9 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.Table.Align;
 import com.vaadin.ui.Table.RowHeaderMode;
 import com.vaadin.ui.TextArea;
@@ -42,7 +54,13 @@ import com.vaadin.ui.Window;
 
 public class DashboardView extends VerticalLayout implements View {
 
-    Table t;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4071854876711456470L;
+	Table t;
+	private List<Notificacion> notificaciones;
+	private Integer notifiacionesCant;
 
     public DashboardView() {
         setSizeFull();
@@ -53,27 +71,45 @@ public class DashboardView extends VerticalLayout implements View {
         top.setSpacing(true);
         top.addStyleName("toolbar");
         addComponent(top);
-        final Label title = new Label("My Dashboard");
+        String saludo = ((DashboardUI)UI.getCurrent()).getUser().getSaludo();
+        final Label title = new Label(saludo == null ? "Bienvenido " +((DashboardUI)UI.getCurrent()).getUser().getNombre() : saludo );
         title.setSizeUndefined();
         title.addStyleName("h1");
         top.addComponent(title);
         top.setComponentAlignment(title, Alignment.MIDDLE_LEFT);
         top.setExpandRatio(title, 1);
 
-        Button notify = new Button("2");
-        notify.setDescription("Notifications (2 unread)");
+         notificaciones = ((DashboardUI)UI.getCurrent()).getUser().obtenerNotificacion();
+         notifiacionesCant = notificaciones.size();
+        Button notify = new Button(notifiacionesCant == 0 ? "":notifiacionesCant.toString());
+         
+         notify.setDescription("Notificaciones ("+notifiacionesCant+" no leidas)");
         // notify.addStyleName("borderless");
         notify.addStyleName("notifications");
         notify.addStyleName("unread");
+        if (notifiacionesCant == 0 )   notify.removeStyleName("unread");
         notify.addStyleName("icon-only");
         notify.addStyleName("icon-bell");
         notify.addClickListener(new ClickListener() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = -3250568494372269492L;
+
+			@Override
             public void buttonClick(ClickEvent event) {
                 ((DashboardUI) getUI()).clearDashboardButtonBadge();
                 event.getButton().removeStyleName("unread");
                 event.getButton().setDescription("Notifications");
-
+                for(Notificacion n : notificaciones){
+                	n.setVista(true);
+                	try {
+						HibernateUtil.saveEntity(n);
+					} catch (Exception e) {
+						System.out.println("No se pueden marcar las notificaciones");
+						e.printStackTrace();
+					}
+                }
                 if (notifications != null && notifications.getUI() != null)
                     notifications.close();
                 else {
@@ -82,7 +118,12 @@ public class DashboardView extends VerticalLayout implements View {
                     notifications.focus();
                     ((CssLayout) getUI().getContent())
                             .addLayoutClickListener(new LayoutClickListener() {
-                                @Override
+                                /**
+								 * 
+								 */
+								private static final long serialVersionUID = -6067867129998245551L;
+
+								@Override
                                 public void layoutClick(LayoutClickEvent event) {
                                     notifications.close();
                                     ((CssLayout) getUI().getContent())
@@ -102,9 +143,14 @@ public class DashboardView extends VerticalLayout implements View {
         top.addComponent(editConf);
         editConf.setDescription("Edit Dashboard");
         editConf.addClickListener(new ClickListener() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 6213644941001760982L;
+
+			@Override
             public void buttonClick(ClickEvent event) {
-                final Window w = new Window("Edit Dashboard");
+                final Window w = new Window("Saludo");
 
                 w.setModal(true);
                 w.setClosable(false);
@@ -114,7 +160,11 @@ public class DashboardView extends VerticalLayout implements View {
                 getUI().addWindow(w);
 
                 w.setContent(new VerticalLayout() {
-                    TextField name = new TextField("Dashboard Name");
+                    /**
+					 * 
+					 */
+					private static final long serialVersionUID = -4664796188884801858L;
+					TextField name = new TextField("Saludo");
                     {
                         addComponent(new FormLayout() {
                             {
@@ -134,7 +184,7 @@ public class DashboardView extends VerticalLayout implements View {
                                 addStyleName("footer");
                                 setWidth("100%");
 
-                                Button cancel = new Button("Cancel");
+                                Button cancel = new Button("Cancelar");
                                 cancel.addClickListener(new ClickListener() {
                                     @Override
                                     public void buttonClick(ClickEvent event) {
@@ -147,13 +197,21 @@ public class DashboardView extends VerticalLayout implements View {
                                 setComponentAlignment(cancel,
                                         Alignment.TOP_RIGHT);
 
-                                Button ok = new Button("Save");
+                                Button ok = new Button("Guardar");
                                 ok.addStyleName("wide");
                                 ok.addStyleName("default");
                                 ok.addClickListener(new ClickListener() {
                                     @Override
                                     public void buttonClick(ClickEvent event) {
-                                        title.setValue(name.getValue());
+                                        UsuarioDetalle  usuario = ((DashboardUI)UI.getCurrent()).getUser();
+                                        usuario.setSaludo(name.getValue());
+                                        try {
+                                        	System.err.println(name.getValue());
+											HibernateUtil.saveEntity(usuario);
+										} catch (Exception e) {
+											Notification.show("No se puedo guardar el saludo", Type.HUMANIZED_MESSAGE);
+										}
+                                    	title.setValue(name.getValue());
                                         w.close();
                                     }
                                 });
@@ -170,10 +228,15 @@ public class DashboardView extends VerticalLayout implements View {
         Button edit = new Button();
         edit.addStyleName("icon-config");
         edit.addStyleName("icon-only");
-        top.addComponent(edit);
+        //top.addComponent(edit);
         edit.setDescription("Test de Inversor");
         edit.addClickListener(new ClickListener() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = -3465630020140049816L;
+
+			@Override
             public void buttonClick(ClickEvent event) {
                
 
@@ -192,11 +255,27 @@ public class DashboardView extends VerticalLayout implements View {
         addComponent(row);
         setExpandRatio(row, 1.5f);
 
-        row.addComponent(createPanel(new TopGrossingMoviesChart()));
+        row.addComponent(createPanel(new ChartGanancias().getChart()));
 
-        TextArea notes = new TextArea("Notes");
-        notes.setValue("Remember to:\n· Zoom in and out in the Sales view\n· Filter the transactions and drag a set of them to the Reports tab\n· Create a new report\n· Change the schedule of the movie theater");
+        TextArea notes = new TextArea("Notas");
+        notes.setValue(((DashboardUI)UI.getCurrent()).getUser().getNota());
         notes.setSizeFull();
+        notes.addTextChangeListener(new TextChangeListener() {
+			
+			@Override
+			public void textChange(TextChangeEvent event) {
+				UsuarioDetalle usuario =((DashboardUI)UI.getCurrent()).getUser();
+				System.err.println(event.getText());
+				usuario.setNota(event.getText());
+				try {
+					HibernateUtil.saveEntity(usuario);
+				} catch (Exception e) {
+					System.out.println("No guardo la nota");
+					e.printStackTrace();
+				}
+				
+			}
+		});;
         CssLayout panel = createPanel(notes);
         panel.addStyleName("notes");
         row.addComponent(panel);
@@ -209,7 +288,12 @@ public class DashboardView extends VerticalLayout implements View {
         setExpandRatio(row, 2);
 
         t = new Table() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 2180293203977101507L;
+
+			@Override
             protected String formatPropertyValue(Object rowId, Object colId,
                     Property<?> property) {
                 if (colId.equals("Revenue")) {
@@ -224,19 +308,8 @@ public class DashboardView extends VerticalLayout implements View {
                 return super.formatPropertyValue(rowId, colId, property);
             }
         };
-        t.setCaption("Top 10 Titles by Revenue");
-
-        t.setWidth("100%");
-        t.setPageLength(0);
-        t.addStyleName("plain");
-        t.addStyleName("borderless");
-        t.setSortEnabled(false);
-        t.setColumnAlignment("Revenue", Align.RIGHT);
-        t.setRowHeaderMode(RowHeaderMode.INDEX);
-
-        row.addComponent(createPanel(t));
-
-        row.addComponent(createPanel(new TopSixTheatersChart()));
+        row.addComponent(createPanel(new ChartComposicionCarteraMoneda().getChart()));
+        row.addComponent(createPanel(new ChartComposicionCartera().getChart()));
 
     }
 
@@ -253,9 +326,14 @@ public class DashboardView extends VerticalLayout implements View {
         configure.setDescription("Configure");
         configure.addStyleName("small");
         configure.addClickListener(new ClickListener() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 7437776387499650365L;
+
+			@Override
             public void buttonClick(ClickEvent event) {
-                Notification.show("Not implemented in this demo");
+                Notification.show("No Implementado");
             }
         });
         panel.addComponent(configure);
@@ -273,7 +351,7 @@ public class DashboardView extends VerticalLayout implements View {
     Window notifications;
 
     private void buildNotifications(ClickEvent event) {
-        notifications = new Window("Notifications");
+        notifications = new Window("Notificaciones");
         VerticalLayout l = new VerticalLayout();
         l.setMargin(true);
         l.setSpacing(true);
@@ -286,24 +364,17 @@ public class DashboardView extends VerticalLayout implements View {
         notifications.setPositionX(event.getClientX() - event.getRelativeX());
         notifications.setPositionY(event.getClientY() - event.getRelativeY());
         notifications.setCloseShortcut(KeyCode.ESCAPE, null);
-
+for (Notificacion n : notificaciones){
         Label label = new Label(
                 "<hr><b>"
                      //   + Generator.randomFirstName()
                         + " "
                       //  + Generator.randomLastName()
-                        + " created a new report</b><br><span>25 minutes ago</span><br>"
+                        + n.getMensaje()+ "</b>"+n.getDescripcion()+"<br><span>"+n.getFecha()+"</span><br>"
                        // + Generator.randomText(18)
                         , ContentMode.HTML);
         l.addComponent(label);
-
-        label = new Label("<hr><b>" +
-//Generator.randomFirstName() + " "
-               // + Generator.randomLastName()
-                 " changed the schedule</b><br><span>2 days ago</span><br>"
-              //  + Generator.randomText(10)
-                , ContentMode.HTML);
-        l.addComponent(label);
-    }
+}
+     }
 
 }

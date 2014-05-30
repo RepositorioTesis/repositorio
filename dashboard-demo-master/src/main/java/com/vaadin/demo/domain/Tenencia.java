@@ -38,10 +38,12 @@ public class Tenencia {
 	}
 	
 	static public Tenencia getTenencia(String especie){
-		
 		List<Tenencia> tenencia = (List<Tenencia>)HibernateUtil.getEntity("FROM Tenencia WHERE especie='"+especie+"'and usuario='"+UsuarioDetalle.getCurrentUser().getUsuario()+"'"); 
 		return tenencia.isEmpty() ? null : tenencia.get(0);
-		
-		
+	}
+	
+	static public List<Tenencia> getAll(){
+		return (List<Tenencia>)HibernateUtil.getEntity("FROM Tenencia WHERE usuario='"+UsuarioDetalle.getCurrentUser().getUsuario()+"'"); 
+	
 	}
 }

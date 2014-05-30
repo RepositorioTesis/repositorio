@@ -23,7 +23,10 @@ public class Especie {
 	public static List<Especie> getAll(){
 		return (List<Especie>) HibernateUtil.getEntity("FROM Especie");
 	}
-
+	public static String getEspecie(String detalle){
+		return ((List<Especie>) HibernateUtil.getEntity("FROM Especie WHERE especiedetalle like "+detalle)).get(0).getEspecie();
+	}
+	
 }
 
 
